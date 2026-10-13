@@ -105,17 +105,18 @@ Because deployment steps can run quickly, you may need to test in a disposable c
 
 Before submitting:
 
-- [x] Put all three original, unmodified source files into templates/. Verified using diff -s; all three files are identical to the instructor's originals.
-- [ ] Run `bash -n deploy_agent.sh` to check shell syntax.
-- [ ] Run `./deploy_agent.sh`, deploy with Option A, and verify the roster has the header plus the requested rows.
-- [ ] Deploy with Option B and verify all counts are `0` and `total_sessions` is `1`.
+- [x] Put all three original, unmodified source files into `templates/`. Verified using `diff -s`; all three files are identical to the instructor's originals.
+- [x] Run `bash -n deploy_agent.sh` to check shell syntax.
+- [x] Deploy with Option A and verify the header, three requested student rows, and `total_sessions` set to `5`.
+- [x] Verify Option B generates fresh roster counts of `0` and sets `total_sessions` to `1`.
 - [ ] Confirm the Python version is printed and missing `python3`/`zip` produces a clear error.
-- [ ] Confirm permissions using `ls -l attendance_checker.py Helpers/config.json` (config should show `-rw-------`).
-- [ ] Test default and custom thresholds; invalid values should be rejected.
-- [ ] Complete a short live attendance marking session.
-- [ ] Archive logs and verify filenames/directories; also test the missing-log case.
-- [ ] Test both Ctrl+C and Ctrl+Z in a disposable deployment and inspect the ZIP.
-- [ ] Commit the work to a repository named `deploy_agent_<YourGitHubUsername>` with meaningful commit messages.
+- [x] Confirm permissions: the deployed Python application is executable and `Helpers/config.json` has mode `600`.
+- [x] Test default and custom thresholds; verified that 101 and -1 are rejected, while valid thresholds 75 and 50 are accepted.
+- [x] Complete a live attendance-marking session and verify attendance and absence logs are created.
+- [x] Archive logs and verify filenames/directories for both attendance and absence logs.
+- [x] Test the missing-log case.
+- [x] Test both Ctrl+C and Ctrl+Z in disposable deployments and inspect the ZIP archive.
+- [x] Commit the work to your GitHub repository, `deploy_agent_Isimbisunny`, with meaningful commit messages.
 - [ ] Add your run-through video link below.
 
 ## Walk-through Video
