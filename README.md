@@ -105,7 +105,7 @@ Because deployment steps can run quickly, you may need to test in a disposable c
 
 Before submitting:
 
-- [ ] Put all three original, unmodified source files into `templates/`.
+- [x] Put all three original, unmodified source files into templates/. Verified using diff -s; all three files are identical to the instructor's originals.
 - [ ] Run `bash -n deploy_agent.sh` to check shell syntax.
 - [ ] Run `./deploy_agent.sh`, deploy with Option A, and verify the roster has the header plus the requested rows.
 - [ ] Deploy with Option B and verify all counts are `0` and `total_sessions` is `1`.
@@ -118,7 +118,7 @@ Before submitting:
 - [ ] Commit the work to a repository named `deploy_agent_<YourGitHubUsername>` with meaningful commit messages.
 - [ ] Add your run-through video link below.
 
-## Walk-through video Test Results
+## Walk-through Video
 
 **Video link:** _Paste your shareable video URL here after recording._
 
