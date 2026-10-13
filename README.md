@@ -109,7 +109,7 @@ Before submitting:
 - [x] Run `bash -n deploy_agent.sh` to check shell syntax.
 - [x] Deploy with Option A and verify the header, three requested student rows, and `total_sessions` set to `5`.
 - [x] Verify Option B generates fresh roster counts of `0` and sets `total_sessions` to `1`.
-- [ ] Confirm the Python version is printed and missing `python3`/`zip` produces a clear error.
+- [x] Confirm the Python version is printed and missing `python3`/`zip` produces a clear error.
 - [x] Confirm permissions: the deployed Python application is executable and `Helpers/config.json` has mode `600`.
 - [x] Test default and custom thresholds; verified that 101 and -1 are rejected, while valid thresholds 75 and 50 are accepted.
 - [x] Complete a live attendance-marking session and verify attendance and absence logs are created.
