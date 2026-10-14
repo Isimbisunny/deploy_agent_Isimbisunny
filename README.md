@@ -121,6 +121,4 @@ Before submitting:
 
 ## Walk-through Video
 
-**Video link:** _Paste your shareable video URL here after recording._
-
-In the video, explain the menu, pre-flight checks, the two roster options and their session-count relationship, threshold validation and `sed` updates, file permissions, log archival, and signal cleanup. Show a brief live marking session and a disposable interrupted deployment. Make sure the video link is accessible to your instructor.
+ https://drive.google.com/file/d/1IM-TmFjzw0ua4jUSwO-Q5GjSR9GzUwQU/view?usp=sharing
