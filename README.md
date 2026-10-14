@@ -157,8 +157,4 @@ I recorded a demonstration showing how the deployment agent works, including the
 
 ## Watch the project demonstration on Google Drive
 
-https://drive.google.com/file/d/1IM-TmFjzw0ua4jUSwO-Q5GjSR9GzUwQU/view?usp=sharing
-
-## Repository
-
-GitHub: [Isimbisunny/deploy_agent_Isimbisunny](https://github.com/Isimbisunny/deploy_agent_Isimbisunny)
+https://drive.google.com/file/d/1IM-TmFjzw0ua4jUSwO-Q5GjSR9GzUwQU/view?usp=sharing 
