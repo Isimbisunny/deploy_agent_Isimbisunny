@@ -1,40 +1,52 @@
 # Student Attendance Tracker — Deployment Agent
 
-## Contents
+## About the Project
 
-- `deploy_agent.sh` — menu-driven deploy, run, and archive script.
-- `templates/attendance_checker.py` — **must be the original, unmodified course file**.
-- `templates/assets.csv` — original 10-student sample roster.
-- `templates/config.json` — original configuration template.
+This project is a Bash script that helps set up and manage a Student Attendance Tracker. Instead of creating the project folders and copying files manually, the script does the setup for you.
 
-> The three source files were not bundled with this scaffold. Download them from the course page and place them in `templates/` without editing them before running the script.
+It has a menu that lets you deploy a new project, run an existing one, archive attendance logs, or exit. I also added input validation, file permissions, and signal handling to make the process safer and easier to manage.
+
+## Project Files
+
+- `deploy_agent.sh` — the main script for deployment, running the application, and archiving logs.
+- `templates/attendance_checker.py` — the original Python attendance application.
+- `templates/assets.csv` — the sample student roster.
+- `templates/config.json` — the configuration template.
+
+**Important:** The three files in `templates/` must remain identical to the original course files. The deployment script works with them without modifying the original templates.
 
 ## Requirements
 
+To run the project, you need:
+
 - Bash
-- `python3`
+- Python 3
 - `zip`
-- Standard Unix tools: `cp`, `chmod`, `mkdir`, `head`, `sed`, `date`, and `rm`
+- Standard Unix tools, including `cp`, `chmod`, `mkdir`, `head`, `sed`, `date`, and `rm`
 
-On macOS, the script uses the macOS-compatible `sed -i ''` form. On Linux, it uses GNU `sed -i`.
+The script supports both macOS and Linux. It uses the appropriate `sed` command for each system.
 
-## Run the agent
+## How to Run It
 
-From this repository directory:
+Open the terminal in the repository directory and run:
 
 ```bash
 chmod +x deploy_agent.sh
 ./deploy_agent.sh
 ```
 
-Select from the menu:
+You will see a menu with four options:
 
-1. **Deploy application** — asks for a project name, creates `attendance_tracker_<name>/`, builds a roster, sets permissions, optionally updates thresholds, and launches the application as a startup verification.
-2. **Run existing application** — runs `python3 attendance_checker.py` from the selected project's root.
-3. **Archive logs** — copies each existing log to its own timestamped archive directory.
-4. **Exit**.
+1. **Deploy application** — creates a new project, prepares the student roster, sets permissions, configures thresholds if needed, and starts the application.
+2. **Run existing application** — opens an already deployed project and runs the attendance checker.
+3. **Archive logs** — saves copies of existing attendance and absence logs in timestamped folders.
+4. **Exit** — closes the script.
 
-The expected deployed structure is:
+## How Deployment Works
+
+When deploying a project, the script asks for a project name and creates a directory called `attendance_tracker_<name>`.
+
+The deployed project has this structure:
 
 ```text
 attendance_tracker_<name>/
@@ -43,82 +55,110 @@ attendance_tracker_<name>/
 │   ├── assets.csv
 │   └── config.json
 ├── reports/
-└── archives/                 # created when logs are archived
+└── archives/
     ├── attendance/
     └── absent/
 ```
 
-The Python application is not modified. Its fixed paths are respected by placing the roster and configuration in `Helpers/` and running Python from the project root.
+The `archives/` folders are created when logs are archived.
 
-## Roster choices and session counts
+The Python application is kept unchanged. The script places the roster and configuration in the `Helpers/` directory and runs the application from the project root so that its expected file paths work correctly.
 
-During deployment:
+## Choosing a Student Roster
 
-- **Option A** copies the header and the requested number of rows from `templates/assets.csv`. The sample roster records four prior sessions per student, so `Helpers/config.json` is set to `"total_sessions": 5`.
-- **Option B** generates a fresh roster from arrays in the shell script. Attendance and absence counts start at zero, so `Helpers/config.json` is set to `"total_sessions": 1`.
+During deployment, you can choose between two roster options.
 
-The script accepts 1–10 students because the provided sample roster and the built-in sample arrays each contain 10 students.
+**Option A — Use the sample roster**
 
-## Permissions and thresholds
+The script copies the header and the number of student records you request from the original `assets.csv` file. The sample records already contain four previous sessions, so the configuration is set to `"total_sessions": 5`.
 
-- `attendance_checker.py` is made executable with `chmod +x`.
-- `Helpers/config.json` is set to mode `600` (`rw-------`), so only the file owner can read or write grading-sensitive thresholds.
-- The threshold prompt accepts whole numbers from 0 through 100. Press Enter to use the defaults: warning `75`, failure `50`.
-- If the user chooses to update thresholds, `sed` changes only the matching `"warning": number` and `"failure": number` lines in the deployed JSON, without reordering or reformatting the file.
+**Option B — Create a fresh roster**
 
-If permission changes fail, the script reports the error rather than claiming success. Run it from a directory where you have permission to create files.
+The script creates a new roster using student data defined in the Bash script. Attendance and absence counts start at zero, and `"total_sessions"` is set to `1`.
 
-## Log archival
+You can choose between 1 and 10 students for either option.
 
-After a marking session, select **3) Archive logs**. The script checks each file separately:
+## File Permissions and Thresholds
 
-- `reports/attendance.log` → `archives/attendance/attendance_YYYYMMDD_HHMMSS.log`
-- `reports/absent.log` → `archives/absent/absent_YYYYMMDD_HHMMSS.log`
+The script sets the permissions needed for the application to run:
 
-The timestamp is generated when the archive action starts. Each existing log is copied with its own final path printed. If a log does not exist (for example, no absences were logged), the script prints a friendly message and continues. Archiving copies rather than removes the original report logs.
+- `attendance_checker.py` is made executable using `chmod +x`.
+- `Helpers/config.json` is set to permission mode `600`, which allows only the file owner to read and write it.
 
-## Signal handling: Ctrl+C and Ctrl+Z during deployment
+You can also choose attendance warning and failure thresholds. If you press Enter, the script uses the default warning threshold of `75` and failure threshold of `50`.
 
-Signal traps are installed only while Feature 1 is creating/configuring the project. If Ctrl+C (`SIGINT`) or Ctrl+Z (`SIGTSTP`) is pressed during that phase, the handler:
+Thresholds must be whole numbers between 0 and 100. Invalid values, such as `101` or `-1`, are rejected. When custom thresholds are selected, the script updates the matching values in the deployed configuration file.
 
-1. Prints an interruption message.
-2. Uses `zip` to create `attendance_tracker_<name>_archive.zip` containing the partial project directory, if it exists.
-3. Removes the incomplete working directory to avoid workspace clutter.
-4. Exits cleanly with status 130.
+If a permission change fails, the script reports the error instead of pretending it worked.
 
-This trap is intentionally disabled before the attendance application starts; it does not intercept signals during the instructor's marking session.
+## Running an Existing Project
 
-### How to test the interrupt path
+Choose **Option 2** and enter the name of a project that has already been deployed.
 
-1. Use a disposable project name and start Feature 1.
-2. Once the project directory has been created and setup is still in progress, press Ctrl+C or Ctrl+Z.
-3. Confirm that `attendance_tracker_<name>_archive.zip` exists beside the script and that the incomplete `attendance_tracker_<name>/` directory has been removed.
-4. Inspect the archive with:
+Before running the application, the script checks that `attendance_checker.py` exists and that Python 3 is available. It then changes to the project directory and runs the Python application.
 
-   ```bash
-   unzip -l attendance_tracker_<name>_archive.zip
-   ```
+This option is useful when you want to record another attendance session without deploying the project again.
 
-Because deployment steps can run quickly, you may need to test in a disposable copy with a temporary delay added locally, then remove that test-only delay before submitting. Do not leave artificial delays in the submitted script.
+## Archiving Attendance Logs
 
-## Validation checklist
+After a marking session, choose **Option 3** and enter the project name.
 
-Before submitting:
+The script checks for the two report files and copies each existing file into its own archive folder:
 
-- [x] Put all three original, unmodified source files into `templates/`. Verified using `diff -s`; all three files are identical to the instructor's originals.
-- [x] Run `bash -n deploy_agent.sh` to check shell syntax.
-- [x] Deploy with Option A and verify the header, three requested student rows, and `total_sessions` set to `5`.
-- [x] Verify Option B generates fresh roster counts of `0` and sets `total_sessions` to `1`.
-- [x] Confirm the Python version is printed and missing `python3`/`zip` produces a clear error.
-- [x] Confirm permissions: the deployed Python application is executable and `Helpers/config.json` has mode `600`.
-- [x] Test default and custom thresholds; verified that 101 and -1 are rejected, while valid thresholds 75 and 50 are accepted.
-- [x] Complete a live attendance-marking session and verify attendance and absence logs are created.
-- [x] Archive logs and verify filenames/directories for both attendance and absence logs.
-- [x] Test the missing-log case.
-- [x] Test both Ctrl+C and Ctrl+Z in disposable deployments and inspect the ZIP archive.
-- [x] Commit the work to your GitHub repository, `deploy_agent_Isimbisunny`, with meaningful commit messages.
-- [ ] Add your run-through video link below.
+- `reports/attendance.log` is copied to `archives/attendance/attendance_YYYYMMDD_HHMMSS.log`.
+- `reports/absent.log` is copied to `archives/absent/absent_YYYYMMDD_HHMMSS.log`.
+
+The timestamp helps distinguish archived files from different runs. If one of the logs does not exist, the script informs you and continues. The original report files are not deleted.
+
+## Handling Ctrl+C and Ctrl+Z
+
+I added signal handling for interruptions during project deployment.
+
+If Ctrl+C (`SIGINT`) or Ctrl+Z (`SIGTSTP`) is pressed while the script is setting up a project, it attempts to:
+
+1. Display an interruption message.
+2. Create a ZIP archive of the partial project, if the directory exists.
+3. Remove the incomplete project directory.
+4. Exit with status `130`.
+
+The signal traps are limited to the deployment setup. They are disabled before the attendance application starts, so they do not interfere with the instructor's live marking session.
+
+### Testing the interruption feature
+
+Use a disposable project name to test this feature. Interrupt the script while deployment is still in progress, then check that the archive exists and the incomplete directory has been removed.
+
+You can inspect the archive with:
+
+```bash
+unzip -l attendance_tracker_<name>_archive.zip
+```
+
+Since deployment may finish quickly, testing the interruption feature can require careful timing. Any temporary delay used for testing should be removed before submission.
+
+## Testing and Validation
+
+I tested the main features of the script, including:
+
+- Checking shell syntax with `bash -n deploy_agent.sh`.
+- Deploying a project with Option A and checking the roster and session count.
+- Creating a fresh roster with Option B.
+- Checking the Python version and handling missing dependencies.
+- Verifying the executable permission on the Python application and permission mode `600` on the configuration file.
+- Testing default and custom thresholds, including invalid values.
+- Running a live attendance-marking session and checking the generated logs.
+- Archiving attendance and absence logs and testing the missing-log case.
+- Testing both Ctrl+C and Ctrl+Z during deployment and checking the resulting ZIP archives.
+
+The original course files were also checked against the instructor's versions to confirm that they had not been modified.
 
 ## Walk-through Video
 
- https://drive.google.com/file/d/1IM-TmFjzw0ua4jUSwO-Q5GjSR9GzUwQU/view?usp=sharing
+I recorded a demonstration showing how the deployment agent works, including the main features and testing process.
+
+## Watch the project demonstration on Google Drive
+
+https://drive.google.com/file/d/1IM-TmFjzw0ua4jUSwO-Q5GjSR9GzUwQU/view?usp=sharing
+
+## Repository
+
+GitHub: [Isimbisunny/deploy_agent_Isimbisunny](https://github.com/Isimbisunny/deploy_agent_Isimbisunny)
