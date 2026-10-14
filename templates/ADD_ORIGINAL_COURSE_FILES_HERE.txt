@@ -1,4 +1,0 @@
-Place the three unmodified course-provided files in this folder:
-- attendance_checker.py
-- assets.csv
-- config.json
