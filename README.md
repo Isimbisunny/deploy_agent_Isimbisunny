@@ -156,5 +156,4 @@ The original course files were also checked against the instructor's versions to
 I recorded a demonstration showing how the deployment agent works, including the main features and testing process.
 
 ## Watch the project demonstration on Google Drive
-
 https://drive.google.com/file/d/1IM-TmFjzw0ua4jUSwO-Q5GjSR9GzUwQU/view?usp=sharing 
